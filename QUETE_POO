@@ -1,0 +1,139 @@
+using System;
+
+namespace queteLencapsulation
+{
+    public class Beerencapsulator
+    {
+        private double _avalaibleBeerVolume=0;
+        private int _avalaibleBottle;
+        private int _avalaibleCapsule;
+
+        public double GetAvalaibleBeerVolume()
+        {
+            return _avalaibleBeerVolume;
+        }
+
+        public int GetAvalaibleBottle()
+        {
+            return _avalaibleBottle;
+        }
+
+        public void SetAvalaibleBottle(int avalaibleBottle)
+        {
+            _avalaibleBottle = avalaibleBottle;
+        }
+
+        public int GetAvalaibleCapsule()
+        {
+            return _avalaibleCapsule;
+        }
+
+        public void SetAvalaibleCapsule(int avalaibleCapsule)
+        {
+            _avalaibleCapsule = avalaibleCapsule;
+        }
+
+        public void AddBeer(double addedBeerVolume)
+        {
+            _avalaibleBeerVolume = _avalaibleBeerVolume + addedBeerVolume;
+        }
+
+        public bool CheckPossibilityToEncapsulated(int nbBottleToDo)
+        {
+            if ((_avalaibleBeerVolume >= (33*Convert.ToDouble(nbBottleToDo))) && (_avalaibleBottle >= nbBottleToDo) && (_avalaibleCapsule >= nbBottleToDo))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public void MissingComponent(int nbBottleToDo)
+        {
+            if (_avalaibleBeerVolume < (33 * Convert.ToDouble(nbBottleToDo)))
+            {
+                double necessaryBeerVolume = Convert.ToDouble(33 *(nbBottleToDo) - GetAvalaibleBeerVolume());
+                Console.WriteLine("You don't have enough beer, please write this quantity " + necessaryBeerVolume + " to produced the number of encapsulated beer that you want");
+            }
+            else if (_avalaibleBottle < nbBottleToDo)
+            {
+                int necessaryBottleQuantity = nbBottleToDo - GetAvalaibleBottle();
+                Console.WriteLine("You don't have enough bottle, please write this quantity " + necessaryBottleQuantity + " to produced the number of encapsulated beer that you want");
+            }
+            else if (_avalaibleCapsule >= nbBottleToDo)
+            {
+                int necessaryCapsuleQuantity = nbBottleToDo - GetAvalaibleCapsule();
+                Console.WriteLine("You don't have enough capsule, please write this quantity " + necessaryCapsuleQuantity + " to produced the number of encapsulated beer that you want");
+            }
+        }
+
+        public int ProduceEncapsulatedBeerBottle(int nbBottleToDo)
+        {
+            int i;
+            int nbBottleFill = 0;
+            for (i=0; i<nbBottleToDo; i++)
+            {
+                _avalaibleBeerVolume = _avalaibleBeerVolume - 33;
+                _avalaibleBottle = _avalaibleBottle - 1;
+                _avalaibleCapsule = _avalaibleCapsule - 1;
+                nbBottleFill = i + 1;
+            }
+            return nbBottleFill;
+        }
+    }
+
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            double avalaibleBeerVolume = 0;
+            int avalaibleCapsule = 0;
+            int avalaibleBottle = 0;
+            double addedBeerVolume = 0;
+            int addedBottleQuantity = 0;
+            int addedCapsuleQuantity = 0;
+            
+            Beerencapsulator beerFactory = new Beerencapsulator();
+
+            Console.WriteLine("Write how many Beer volume are available: ");
+            avalaibleBeerVolume = Convert.ToDouble(Console.ReadLine());
+            beerFactory.AddBeer(avalaibleBeerVolume);
+
+            Console.WriteLine("Write how many Bottle are available: ");
+            while (avalaibleBottle<0)
+            {
+                Console.WriteLine("Error: You wrote a negatif value, please write a positive value for the number of Bottle that are available:");
+                avalaibleBottle = Convert.ToInt32(Console.ReadLine());
+            }
+            avalaibleBottle = Convert.ToInt32(Console.ReadLine());
+            beerFactory.SetAvalaibleBottle(avalaibleBottle);
+
+            Console.WriteLine("Write how many Capsule are available: ");
+            while ( avalaibleCapsule<0)
+            {
+                Console.WriteLine("Error: You wrote a negatif value, please write a positive value for the number of Capsule that are available:");
+                avalaibleCapsule = Convert.ToInt32(Console.ReadLine());
+            }
+            avalaibleCapsule = Convert.ToInt32(Console.ReadLine());
+            beerFactory.SetAvalaibleCapsule(avalaibleCapsule);
+
+            Console.WriteLine("Write how many encapsulated beer bottle you want to do: ");
+            int nbBottleToDo= Convert.ToInt32(Console.ReadLine());
+
+
+            if(beerFactory.CheckPossibilityToEncapsulated(nbBottleToDo))
+            {
+                int producedBottle = beerFactory.ProduceEncapsulatedBeerBottle(nbBottleToDo);
+                Console.WriteLine("You made " + producedBottle + " encapsulated beer bottle.");
+            }
+            else
+            {
+                Console.WriteLine("0. You don't have enough materials to do the number of wanted bottle!");
+                beerFactory.MissingComponent(nbBottleToDo);
+            }
+        }
+    }
+}
